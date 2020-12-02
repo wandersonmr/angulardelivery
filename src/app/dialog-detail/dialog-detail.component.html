@@ -1,0 +1,130 @@
+<div id="print-section">
+    <div class="teste">
+        <mat-toolbar style="padding:0;" role="toolbar" class="">
+            <span> Detalhes do pedido #{{data.id}}</span>
+            <span class="fx-spacer"></span>
+    
+        </mat-toolbar>
+    
+        <mat-dialog-content style="width: 500px;">
+
+            <p class="dataDetail">{{dateParser(data.dateAndHour)}}</p>
+
+            <p class="dataDetail pedido" style="display: none;">Pedido: #{{data.id}}</p>
+
+    
+            <div class="line titleDetail ">Cliente</div>
+            <p  class="fontBig">{{data.user.name}}</p>
+            <p class="fontBig">{{data.user.cellphone}}</p>
+    
+            <div class="line titleDetail ">Produtos</div>
+    
+            <table mat-table [dataSource]="data.productOrder" class="main-table">
+    
+                <ng-container matColumnDef="quantity">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header="quantity">QTD</th>
+                    <td  class="fontBig" mat-cell *matCellDef="let item" style="text-align: left; padding:5;">
+                        {{ item.quantity}}</td>
+                </ng-container>
+    
+                <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header="name">Descrição</th>
+                    <td mat-cell *matCellDef="let item" style="text-align: left">
+                        <span class="productName"> {{ item.product.name }} </span><br>
+                        
+                        <div class="product"  style="width: 100%; display: block;">
+    
+                            <diV>             
+                                <div style="width: 100%; display: block; float: left;    margin-top: -15px; margin-bottom: 10px;" class="containerAdditional">   
+                                    <span class="additional" style="font-size: 11px;" *ngIf="item.additionals.length!==0"><br />Adicionais:</span>
+                                    <span class="additional" style="font-size: 11px;" *ngFor="let additionals of item.additionals">
+                                        {{additionals.quantity}} - {{additionals.productAdditional.name}} /
+                                        <!-- <span *ngIf="item.additionals.length > 1"> / </span> -->
+                                    </span>
+                                </div>
+                            </diV>
+                        </div>
+
+                        <span *ngIf="item.productSize.unit === 'QUANTITY' && item.productSize.quantity > 1" class="price" style="display: block;">
+                            {{item.productSize.quantity}} unidades
+                          </span>
+                        <span *ngIf="item.productSize.unit === 'GRAMS'" class="price" style="display: block;">
+                            {{item.productSize.quantity}} gr
+                          </span>
+                          <span *ngIf="item.productSize.unit === 'KILOGRAM'" class="price" style="display: block;">
+                            {{item.productSize.quantity}} Kg
+                        </span>
+
+                        <span *ngIf="item.note !== ''"> <br/> Obs: {{item.note}}</span>
+                    </td>
+                </ng-container>
+    
+                <ng-container matColumnDef="productValue">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header="productValue">Valor</th>
+                    <td mat-cell *matCellDef="let item" style="text-align: right; color: #cc9200; padding-right: 0;" class="productValue">
+                        {{ calcProduct(item) |  currency:'BRL':true}}</td>
+                </ng-container>
+    
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="element-row"></tr>
+            </table>
+    
+    
+            <div class="line titleDetail">Forma de entrega</div>
+    
+    
+            <!-- <div  style="float: left;width:100%; margin-bottom: 3px;" *ngIf="data.typeDelivery==='DELIVERY'">Delivery</div> -->
+            <div style="float: left;width:100%;" *ngIf="data.typeDelivery!=='DELIVERY'">Retirada</div>
+    
+            <div  style="width: 100%; padding-top: 5px;padding-bottom: 5px;" *ngIf="data.typeDelivery==='DELIVERY'">
+                <div class="address" style="width: 80%; float: left; margin-bottom: 3px;">{{data.address.street}} - {{data.address.number}},
+                    {{data.address.neighborhood}}, {{data.address.city}} - {{data.address.uf}}
+                </div>
+                <div style="width: 80%; float: left; margin-bottom: 3px;" class="address">Referência: {{data.address.reference}} </div>
+                <div class="money deliveryMoney" style="width: 20%; float: left; text-align: right;font-size: large; color: #cc9200;">
+                    {{data.deliveryPrice | currency:'BRL':true}}</div>
+            </div>
+    
+    
+            <div class="line titleDetail " style="padding-top: 5px; float: left;">Forma de pagamento</div>
+            <div style="float: left;width:100%;" *ngIf="data.typePay === 'CREDIT_CARD'">Maquina móvel</div>
+            <div style="float: left;width:100%;" *ngIf="data.typePay !== 'CREDIT_CARD'">Dinheiro</div>
+            <div style="float: left;width:100%;font-size: small;padding-top: 3px;"
+                *ngIf="data.typePay !== 'CREDIT_CARD' && data.changeMoney!==null ">Troco:
+                {{data.changeMoney | currency:'BRL':true}} </div>
+            <div style="float: left;width:100%; padding-top: 3px;"
+                *ngIf="data.typePay !== 'CREDIT_CARD' && data.changeMoney===null ">Sem troco </div>
+    
+            <div class="line titleDetail" *ngIf="coupon.code" style="padding-top: 5px;">Cupom de desconto</div>
+            <div style="float: left;width: 85%;margin-bottom: 10px;" *ngIf="coupon.code">{{coupon.code}}</div>
+            <div class="money" style="float: left;width: 15%;margin-bottom: 10px;color:red; text-align: right;"
+                *ngIf="coupon.code && coupon.typeCoupon == 'PERCENT' "> -{{coupon.value}}%</div>
+            <div class="money" style="float: left;width: 15%;margin-bottom: 10px;color:red; text-align: right;"
+                *ngIf="coupon.code && coupon.typeCoupon == 'VALUE' ">
+                -{{coupon.value | currency:'BRL':true}}</div>
+            
+            <div class="line titleDetail" *ngIf="data.cpfOrCnpj !== '' " style="padding-top: 20px;">CPF/CNPJ no cupom fiscal
+            </div>
+            <p style="float: left;width: 85%;margin-bottom: 10px;" *ngIf="data.cpfOrCnpj !== '' "> {{data.cpfOrCnpj}}</p>
+    
+            <div class="money total" style="width: 100%; float:right;text-align: right;font-size: x-large; color: #cc9200;">
+                <span style="color: black;font-size: large;">Total: </span>
+    
+                {{totalValue | currency:'BRL':true}}
+            </div>
+        </mat-dialog-content>
+
+    <div class="rodape" style="display: none; text-align: center; width: 100%;height: 80px;">
+        ......................................................................................
+    </div>
+
+    </div>
+</div>
+
+<mat-dialog-actions>
+
+
+    <button class="mat-stroked-button" (click)="close()">Fechar</button>
+    <button mat-raised-button color="primary" (click)="onPrint()" style="margin-left: 5px;">Imprimir</button>
+
+</mat-dialog-actions>

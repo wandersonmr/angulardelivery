@@ -1,0 +1,123 @@
+<p></p>
+
+<mat-card>
+  <h4 class="card-title ">{{titleCard}}</h4>
+
+  <button mat-mini-fab (click)="createUpdateProduct()" *ngIf="isProduct">
+    <mat-icon>add</mat-icon>
+  </button>
+
+  <button mat-mini-fab (click)="createUpdateCoupon()" *ngIf="isCoupon">
+    <mat-icon>add</mat-icon>
+  </button>
+</mat-card>
+
+<div class="mat-elevation-z5">
+  <div class="table-wrap">
+    <table mat-table matSort #tablePrato [dataSource]="dataSource" class="main-table">
+
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="motivoDescricao">ID</th>
+        <td mat-cell *matCellDef="let product" style="text-align: left">
+          {{ product.id}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Nome</th>
+        <td mat-cell *matCellDef="let product" style="text-align: left">
+          {{ product.name}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Descrição</th>
+        <td mat-cell *matCellDef="let product" style="text-align: left">
+          {{ product.description}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="category">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Categoria</th>
+        <td mat-cell *matCellDef="let product" style="text-align: left">
+          {{ product.category}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="priceDefault">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Valor</th>
+        <td mat-cell *matCellDef="let product" style="text-align: left">
+          {{ product.priceDefault | currency:'BRL':true:'1.2-2'}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="isFeatured">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Destaque</th>
+        <td mat-cell *matCellDef="let product" style="text-align: left">
+          {{ product.isFeatured == true ? 'Sim' : 'Não' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="isAvailable">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Disponível</th>
+        <td mat-cell *matCellDef="let product" style="text-align: center">
+          <mat-slide-toggle #toggleElement [checked]="product.isAvailable"  (change)="putStatusProduct(product.id)"  color="accent">
+          </mat-slide-toggle>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="code">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Código</th>
+        <td mat-cell *matCellDef="let coupon" style="text-align: left">
+          {{ coupon.code }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+        <td mat-cell *matCellDef="let coupon" style="text-align: center">
+          <mat-slide-toggle #toggleElement [checked]="coupon.status"  (change)="putStatusCoupon(coupon.id)"  color="accent"></mat-slide-toggle>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="typeCoupon">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipo</th>
+        <td mat-cell *matCellDef="let coupon" style="text-align: left">
+          {{ coupon.typeCoupon }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="value">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Valor</th>
+        <td mat-cell *matCellDef="let coupon" style="text-align: left">
+          {{ coupon.value | currency:'BRL':true:'1.2-2'}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="dateAndHourValidate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Validade</th>
+        <td mat-cell *matCellDef="let coupon" style="text-align: left">
+          <!-- {{ coupon.dateAndHourValidate | date: 'dd/MM/yyyy' }}</td> -->
+          {{ coupon.dateAndHourValidate | date :'short' }}</td>
+
+      </ng-container>
+
+      <ng-container matColumnDef="options">
+        <th mat-header-cell *matHeaderCellDef>Ações</th>
+        <td mat-cell *matCellDef="let product" style="text-align: center;">
+          <a>
+            <i class="material-icons edit" (click)="createUpdateProduct(product)">edit</i>
+            <i class="material-icons delete"
+              (click)="openDialogConfirmation('Deseja remover este produto?', product.id, 'deleteProduct')">delete</i>
+          </a>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="couponOptions">
+        <th mat-header-cell *matHeaderCellDef>Ações</th>
+        <td mat-cell *matCellDef="let coupon" style="text-align: center;">
+          <a>
+            <i class="material-icons edit" (click)="createUpdateCoupon(coupon)">edit</i>
+            <i class="material-icons delete"
+            (click)="openDialogConfirmation('Deseja remover este cupom?', coupon.id, 'deleteCoupon')">delete</i> 
+          </a>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="element-row"></tr>
+    </table>
+  </div>
+  <mat-paginator [length]="dataSource.data.length" [pageSize]="5" [pageSizeOptions]="[5, 10, 20, 40]"></mat-paginator>
+</div>

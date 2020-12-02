@@ -1,0 +1,79 @@
+<mat-toolbar color="primary" fxFlex="100">
+  
+  
+  <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu" style="color: black;">
+    <mat-icon>more_vert</mat-icon>
+    
+  </button>
+    <mat-menu #menu>
+    <button mat-menu-item [routerLink]="['/home']">  
+      <mat-icon>room_service
+      </mat-icon>
+      <span>Pedidos</span>
+    </button>
+    <button mat-menu-item [routerLink]="['/product']">
+      <mat-icon>fastfood</mat-icon>
+      <span>Produtos</span>
+    </button>
+    <button mat-menu-item [routerLink]="['/coupon']">
+      <mat-icon>local_atm</mat-icon>
+      <span>Cupons</span>
+    </button>
+    <button mat-menu-item [routerLink]="['/category']">
+      <mat-icon>category</mat-icon>
+      <span>Categorias</span>
+    </button>
+    <button mat-menu-item (click)="openPushNotification()">
+      <mat-icon>notifications</mat-icon>
+      <span>Enviar Notificação</span>
+    </button>
+    <button mat-menu-item (click)="openDialogFreight()">
+      <mat-icon>attach_money</mat-icon>
+      <span>Entrega</span>
+    </button>
+    <button mat-menu-item [routerLink]="['/report']">
+      <mat-icon>assignment</mat-icon>
+      <span>Relatório</span>
+    </button>
+    <!-- <button mat-menu-item>
+      <mat-icon>settings</mat-icon>
+      <span>Configurações</span>
+    </button> -->
+  </mat-menu>  
+  
+  
+  <div class="conteudoButton" fxFlex="50" fxLayoutAlign="end start">
+    <img src="../assets/images/logo vandus_off_min.png" alt="image" width="80px" class="logo">
+   </div>
+
+
+  <div class="conteudoButton" fxFlex="94" fxLayoutAlign="end start" style="margin-right: 8px;">
+
+    
+    <div style="padding-right: 28px;">
+    <button mat-icon-button  (click)="openDialog()" class="button-sair" aria-label="Example icon-button with a menu" style="color: black;font-size: small;">
+      <mat-icon style="font-size: medium;">alarm</mat-icon>
+       {{header.timeDeliveryInitial}}  - {{header.timeDeliveryFinal}}
+    </button>
+  </div>
+
+
+    <mat-slide-toggle #toggleElement [checked]="checked"  (change)="putstatus()"  color="accent" class="button-sair"  style="padding-top: 8px;padding-left: 8px;margin-right: 5px; font-size: small;color: black;">
+      <div *ngIf="header.isOpen===true">Online</div>
+      <div *ngIf="header.isOpen===false">Offline</div>
+    </mat-slide-toggle>
+    
+
+
+    <!--<a mat-stroked-button *ngIf="!butao" [routerLink]="['/login']"  class="button-entrar">Entrar</a>
+    <a mat-stroked-button *ngIf="!butao"  [routerLink]="['/cadastrar-usuario']" class="button-cadastrar">Cadastrar</a>
+    !-->
+
+    <button mat-icon-button [matMenuTriggerFor]="menu"   (click)="deslogar()" class="button-sair" aria-label="Example icon-button with a menu" style="color: black;font-size: small;">
+      <mat-icon style="font-size: medium;">exit_to_app</mat-icon>
+        Sair
+    </button>
+
+
+  </div>
+</mat-toolbar>

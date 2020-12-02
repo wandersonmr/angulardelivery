@@ -1,0 +1,24 @@
+<div cdkFocusRegionstart class="header">
+    <h2 *ngIf="!isUpdate" class="headerTitle" mat-dialog-title>Cadastrar Categoria</h2>
+    <h2 *ngIf="isUpdate" class="headerTitle" mat-dialog-title>Atualizar Categoria</h2>
+
+    <button class="headerButton" mat-button (click)="close()">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+<p></p>
+<form [formGroup]="categoryFormGroup">
+    <mat-form-field appearance="outline">
+        <mat-label>Descrição</mat-label>
+        <input type="text" matInput required maxlength="100" [(ngModel)]="category.name" formControlName="name">
+    </mat-form-field>
+    <mat-checkbox formControlName="isAvailable" [(ngModel)]="category.isAvailable">
+        Disponível
+    </mat-checkbox>
+
+    <div class="button-row">
+        <button mat-raised-button submit color="primary" *ngIf="!isUpdate" (click)="postCategory()">Salvar</button>
+        <button mat-raised-button submit color="primary" *ngIf="isUpdate" (click)="putCategory()">Salvar</button>
+    </div>
+</form>
+

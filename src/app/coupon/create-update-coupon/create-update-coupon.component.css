@@ -1,0 +1,21 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top : 1px;
+}
+
+.headerTitle {
+    margin: 0;
+    font-size: 20px;
+    color: #5f6162;
+}
+
+.mat-form-field {
+    width: 100%;
+}
+
+.button-row{
+    display: flex;
+    justify-content: center;
+}

@@ -1,0 +1,60 @@
+<app-header></app-header>
+
+<div class="content">
+
+    <mat-form-field class="search">
+        <input matInput [(ngModel)]="categoryName"  (ngModelChange)="filter()" type="search" placeholder="Pesquisar categoria" name="search">
+    </mat-form-field>
+
+    <div class="button-row">
+        <!-- <button mat-raised-button color="primary" (click)="createUpdateCategory()" style="margin-right: 5px;">Adicionar
+            Categoria</button> -->
+        <button mat-raised-button color="primary" (click)="putPosition()">Salvar ordenação</button>
+    </div>
+
+    <mat-card>
+        <h4 class="card-title ">Categorias</h4>
+
+        <button mat-mini-fab (click)="createUpdateCategory()">
+            <mat-icon>add</mat-icon>
+        </button>
+
+    </mat-card>
+
+    <table mat-table #table [dataSource]="dataSource" class="mat-elevation-z8" cdkDropList
+        [cdkDropListData]="dataSource" (cdkDropListDropped)="dropTable($event)">
+
+        <!-- Position Column -->
+        <ng-container matColumnDef="id">
+            <th  class="col-xs"mat-header-cell *matHeaderCellDef> ID </th>
+            <td  class="col-md"mat-cell *matCellDef="let element"> {{element.id}} </td>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+            <th class="col-xs" mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+            <td class="col-md" mat-cell *matCellDef="let element"> {{element.name}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="isAvailable">
+            <th class="col-xs" mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+            <td class="col-md" mat-cell *matCellDef="let category" style="text-align: left">
+                <mat-slide-toggle #toggleElement [checked]="category.isAvailable"
+                    (change)="putStatusCategory(category.id)" color="accent"></mat-slide-toggle>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="categoryOptions">
+            <th class="col-xs" mat-header-cell *matHeaderCellDef>Ações</th>
+            <td class="col-md" mat-cell *matCellDef="let category" style="text-align: left;">
+                <a>
+                    <i class="material-icons edit" (click)="createUpdateCategory(category)">edit</i>
+                    <i class="material-icons delete"
+                        (click)="openDialogConfirmation('Deseja remover esta categoria?', category.id, 'deleteCategory')">delete</i>
+                </a>
+            </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" cdkDrag [cdkDragData]="row" cdkDragLockAxis="y"></tr>
+    </table>
+</div>

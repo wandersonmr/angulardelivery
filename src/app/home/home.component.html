@@ -1,0 +1,253 @@
+<app-header></app-header>
+
+<!-- <mat-progress-spinner mode="indeterminate" *ngIf="IsWait"></mat-progress-spinner> -->
+
+<diV style="padding: 50px;padding-top: 20px;">
+  <mat-form-field class="example-full-width login-form-field">
+    <input matInput class="form-control" type="search" placeholder="Pesquisar cliente" name="search"
+      [(ngModel)]="clientName" (ngModelChange)="filter()">
+  </mat-form-field>
+
+  <mat-card>
+    <mat-icon style="font-size: large;">alarm</mat-icon>Pedidos - Aguardando aceitação
+  </mat-card>
+
+  <mat-table [dataSource]="dataSource" class="mat-elevation-z8" *ngIf="dataSource.length > 0">
+    <!-- Position Column -->
+    <ng-container matColumnDef="position">
+      <mat-header-cell *matHeaderCellDef> No. </mat-header-cell>
+      <mat-cell *matCellDef="let dataSource"> {{dataSource.id}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="dateHour">
+      <mat-header-cell *matHeaderCellDef> Data e Hora </mat-header-cell>
+      <mat-cell *matCellDef="let dataSource"> {{dateParser(dataSource.dateAndHour)}} </mat-cell>
+    </ng-container>
+
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef> Nome </mat-header-cell>
+      <mat-cell *matCellDef="let dataSource"> {{dataSource.user.name}} </mat-cell>
+    </ng-container>
+
+    <!-- Weight Column -->
+    <ng-container matColumnDef="weight">
+      <mat-header-cell *matHeaderCellDef> Tipo de pagamento </mat-header-cell>
+      <mat-cell *matCellDef="let dataSource">
+        <p *ngIf="dataSource.typePay === 'CREDIT_CARD'">Maquina movel</p>
+        <p *ngIf="dataSource.typePay !== 'CREDIT_CARD'">Dinheiro</p>
+      </mat-cell>
+    </ng-container>
+
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="symbol">
+      <mat-header-cell *matHeaderCellDef> Tipo de entrega </mat-header-cell>
+      <mat-cell *matCellDef="let dataSource">
+        <p *ngIf="dataSource.typeDelivery==='DELIVERY'">Delivery</p>
+        <p *ngIf="dataSource.typeDelivery!=='DELIVERY'">Retirada</p>
+      </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="money">
+      <mat-header-cell *matHeaderCellDef> Troco </mat-header-cell>
+      <mat-cell *matCellDef="let element"> </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="detail">
+      <mat-header-cell *matHeaderCellDef> Ações </mat-header-cell>
+      <mat-cell *matCellDef="let dataSource">
+        <span (click)="openDialogConfirmation('Deseja aceitar este pedido?', dataSource.id, 'update', true)"
+          style="color: green;cursor: pointer;" class="material-icons">done </span>
+        <span (click)="openDialogConfirmation('Deseja recusar este pedido?', dataSource.id, 'cancel', true)"
+          style="color: #c4342d;cursor: pointer;" class="material-icons">cancel </span>
+        <span (click)="openDialog(dataSource)" style="cursor: pointer;" class="material-icons">search </span>
+      </mat-cell>
+    </ng-container>
+
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
+
+  <div *ngIf="dataSource.length === 0"><span style="font-size: small;">Nenhum pedido aguardando aceitação</span></div>
+
+  <!--aceitos-->
+  <mat-card style="margin-top: 20px;">
+    <mat-icon style="font-size: large;">fastfood</mat-icon>Pedidos - Em produção
+  </mat-card>
+
+  <mat-table [dataSource]="dataSourcePREPARING" class="mat-elevation-z8" *ngIf="dataSourcePREPARING.length > 0">
+
+    <ng-container matColumnDef="position">
+      <mat-header-cell *matHeaderCellDef> No. </mat-header-cell>
+      <mat-cell *matCellDef="let dataSourcePREPARING"> {{dataSourcePREPARING.id}} </mat-cell>
+    </ng-container>
+
+
+    <ng-container matColumnDef="dateHour">
+      <mat-header-cell *matHeaderCellDef> Data e Hora </mat-header-cell>
+      <mat-cell *matCellDef="let dataSource"> {{dateParser(dataSource.dateAndHour)}} </mat-cell>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef> Nome </mat-header-cell>
+      <mat-cell *matCellDef="let dataSourcePREPARING"> {{dataSourcePREPARING.user.name}} </mat-cell>
+    </ng-container>
+
+    <!-- Weight Column -->
+    <ng-container matColumnDef="weight">
+      <mat-header-cell *matHeaderCellDef> Tipo de pagamento </mat-header-cell>
+      <mat-cell *matCellDef="let dataSourcePREPARING">
+        <p *ngIf="dataSourcePREPARING.typePay === 'CREDIT_CARD'">Maquina movel</p>
+        <p *ngIf="dataSourcePREPARING.typePay !== 'CREDIT_CARD'">Dinheiro</p>
+      </mat-cell>
+    </ng-container>
+
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="symbol">
+      <mat-header-cell *matHeaderCellDef> Tipo de entrega </mat-header-cell>
+      <mat-cell *matCellDef="let dataSourcePREPARING">
+        <p *ngIf="dataSourcePREPARING.typeDelivery==='DELIVERY'">Delivery</p>
+        <p *ngIf="dataSourcePREPARING.typeDelivery!=='DELIVERY'">Retirada</p>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="money">
+      <mat-header-cell *matHeaderCellDef> Troco </mat-header-cell>
+      <mat-cell *matCellDef="let element"> </mat-cell>
+    </ng-container>
+
+
+    <ng-container matColumnDef="detail">
+      <mat-header-cell *matHeaderCellDef> Ações </mat-header-cell>
+      <mat-cell *matCellDef="let dataSourcePREPARING">
+        <span
+          (click)="openDialogConfirmation('Deseja liberar este pedido para entrega?', dataSourcePREPARING.id, 'update')"
+          style="cursor: pointer;" class="material-icons"> moped </span>
+        <span (click)="openDialog(dataSourcePREPARING)" class="material-icons" style="cursor: pointer;">search </span>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
+
+  <div *ngIf="dataSourcePREPARING.length === 0"><span style="font-size: small;">Nenhum pedido em produção</span></div>
+
+
+  <mat-card style="margin-top: 20px;">
+    <mat-icon style="font-size: large;">directions_bike
+      <!--entrega-->
+    </mat-icon> Pedidos - Em entrega
+  </mat-card>
+  <mat-table [dataSource]="dataSourceDelivering" class="mat-elevation-z8" *ngIf="dataSourceDelivering.length > 0">
+
+    <ng-container matColumnDef="position">
+      <mat-header-cell *matHeaderCellDef> No. </mat-header-cell>
+      <mat-cell *matCellDef="let dataSourceDelivering"> {{dataSourceDelivering.id}} </mat-cell>
+    </ng-container>
+
+
+    <ng-container matColumnDef="dateHour">
+      <mat-header-cell *matHeaderCellDef> Data e Hora </mat-header-cell>
+      <mat-cell *matCellDef="let dataSource"> {{dateParser(dataSource.dateAndHour)}} </mat-cell>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef> Nome </mat-header-cell>
+      <mat-cell *matCellDef="let dataSourceDelivering"> {{dataSourceDelivering.user.name}} </mat-cell>
+    </ng-container>
+
+    <!-- Weight Column -->
+    <ng-container matColumnDef="weight">
+      <mat-header-cell *matHeaderCellDef> Tipo de pagamento </mat-header-cell>
+      <mat-cell *matCellDef="let dataSourceDelivering">
+        <p *ngIf="dataSourceDelivering.typePay === 'CREDIT_CARD'">Maquina movel</p>
+        <p *ngIf="dataSourceDelivering.typePay !== 'CREDIT_CARD'">Dinheiro</p>
+      </mat-cell>
+    </ng-container>
+
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="symbol">
+      <mat-header-cell *matHeaderCellDef> Tipo de entrega </mat-header-cell>
+      <mat-cell *matCellDef="let dataSourceDelivering">
+        <p *ngIf="dataSourceDelivering.typeDelivery==='DELIVERY'">Maquina movel</p>
+        <p *ngIf="dataSourceDelivering.typeDelivery!=='DELIVERY'">Retirada</p>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="money">
+      <mat-header-cell *matHeaderCellDef> Troco </mat-header-cell>
+      <mat-cell *matCellDef="let element"> </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="detail">
+      <mat-header-cell *matHeaderCellDef> Ações </mat-header-cell>
+      <mat-cell *matCellDef="let dataSourceDelivering">
+        <span
+          (click)="openDialogConfirmation('Deseja confirmar entrega deste pedido?', dataSourceDelivering.id, 'update')"
+          style="cursor: pointer;" class="material-icons"> home </span>
+        <span (click)="openDialog(dataSourceDelivering)" style="cursor: pointer;" class="material-icons">search </span>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns2"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns2;"></mat-row>
+  </mat-table>
+
+  <div *ngIf="dataSourceDelivering.length === 0"><span style="font-size: small;">Nenhum pedido em entrega</span></div>
+
+
+  <mat-card style="margin-top: 20px;">
+    <mat-icon style="font-size: large;">house
+    </mat-icon>Pedidos - Entregues
+  </mat-card>
+  <mat-table [dataSource]="dataSourceDelivered" class="mat-elevation-z8" *ngIf="dataSourceDelivered.length > 0">
+
+    <ng-container matColumnDef="position">
+      <mat-header-cell *matHeaderCellDef> No. </mat-header-cell>
+      <mat-cell *matCellDef="let dataSourceDelivered"> {{dataSourceDelivered.id}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="dateHour">
+      <mat-header-cell *matHeaderCellDef> Data e Hora </mat-header-cell>
+      <mat-cell *matCellDef="let dataSource"> {{dateParser(dataSource.dateAndHour)}} </mat-cell>
+    </ng-container>
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef> Nome </mat-header-cell>
+      <mat-cell *matCellDef="let dataSourceDelivered"> {{dataSourceDelivered.user.name}} </mat-cell>
+    </ng-container>
+
+    <!-- Weight Column -->
+    <ng-container matColumnDef="weight">
+      <mat-header-cell *matHeaderCellDef> Tipo de pagamento </mat-header-cell>
+      <mat-cell *matCellDef="let dataSourceDelivered">
+        <p *ngIf="dataSourceDelivered.typePay === 'CREDIT_CARD'">Maquina movel</p>
+        <p *ngIf="dataSourceDelivered.typePay !== 'CREDIT_CARD'">Dinheiro</p>
+      </mat-cell>
+    </ng-container>
+
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="symbol">
+      <mat-header-cell *matHeaderCellDef> Tipo de entrega </mat-header-cell>
+      <mat-cell *matCellDef="let dataSourceDelivered">
+        <p *ngIf="dataSourceDelivered.typeDelivery==='DELIVERY'">Delivery</p>
+        <p *ngIf="dataSourceDelivered.typeDelivery!=='DELIVERY'">Retirada</p>
+      </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="money">
+      <mat-header-cell *matHeaderCellDef> Troco </mat-header-cell>
+      <mat-cell *matCellDef="let element"> </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="detail">
+      <mat-header-cell *matHeaderCellDef> Ações </mat-header-cell>
+      <mat-cell *matCellDef="let dataSourceDelivered"> <span (click)="openDialog(dataSourceDelivered)"
+          style="cursor:pointer ;" class="material-icons">search </span> </mat-cell>
+    </ng-container>
+    <mat-header-row *matHeaderRowDef="displayedColumns2"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns2;"></mat-row>
+  </mat-table>
+</diV>

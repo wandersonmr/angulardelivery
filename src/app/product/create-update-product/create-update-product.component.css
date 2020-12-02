@@ -1,0 +1,47 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top : 1px;
+}
+.headerTitle {
+    margin: 0;
+    font-size: 20px;
+    color: #5f6162;
+}
+  
+.mat-button {
+    display: flex;
+    align-self: flex-start;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+}
+
+.mat-form-field {
+    width: 100%;
+}
+
+.nv-file-over {
+    border: dotted 3px #5f6162;
+    height: 100px;
+    max-width: 155px;
+    width: auto;
+    text-align: center; 
+    margin: 10px
+}
+
+input[type='file'] {
+    display: none
+}
+
+.button-row{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.delete {
+    color: #c4342d;
+}

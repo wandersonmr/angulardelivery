@@ -1,0 +1,9 @@
+<app-header></app-header>
+<div class="content">
+    <mat-form-field class="search">
+        <input matInput  [(ngModel)]="productName" (ngModelChange)="filter()" type="search" placeholder="Pesquisar produto"  name="search" >
+    </mat-form-field>
+
+    <app-table [displayedColumns]="displayedColumns" [dataSource]="dataSource" [titleCard]="title" ></app-table>
+</div>
+

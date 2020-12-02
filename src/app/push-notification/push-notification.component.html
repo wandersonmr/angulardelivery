@@ -1,0 +1,25 @@
+<div cdkFocusRegionstart class="header">
+    <h2 class="headerTitle" mat-dialog-title>Envio de notificações</h2>
+    <button class="headerButton" mat-button (click)="close()">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+
+<p></p>
+<form [formGroup]="pushFormGroup">
+
+    <mat-form-field appearance="outline">
+        <mat-label>Titulo</mat-label>
+        <input type="text" matInput required [(ngModel)]="objPushNotification.title"formControlName="title">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Mensagem</mat-label>
+        <textarea type="text" matInput required [(ngModel)]="objPushNotification.body" formControlName="body"></textarea>
+    </mat-form-field>
+
+</form>
+<div class="button-row">
+    <button mat-raised-button (click)="close()" style="margin-right: 5px;">Cancelar</button>
+    <button mat-raised-button color="primary" (click)="postPushNotification()">Enviar</button>
+</div>

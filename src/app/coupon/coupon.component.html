@@ -1,0 +1,10 @@
+<app-header></app-header>
+<div class="content">
+    <p></p>
+
+    <mat-form-field class="search">
+        <input matInput  [(ngModel)]="couponName" (ngModelChange)="filter()"  type="search" placeholder="Pesquisar cupom"  name="search" >
+    </mat-form-field>
+
+    <app-table [displayedColumns]="displayedColumns" [dataSource]="dataSource" [titleCard]="title" ></app-table>
+</div>

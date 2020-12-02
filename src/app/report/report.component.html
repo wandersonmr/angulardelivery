@@ -1,0 +1,42 @@
+<app-header></app-header>
+<div class="content">
+    <p></p>
+    <mat-card style="width: auto; max-width: 800px;">
+        <mat-form-field appearance="outline" style="margin-right: 10px;">
+            <mat-label>Data Inicial</mat-label>
+            <input matInput [matDatepicker]="picker" [(ngModel)]="initialDate" [max]="maxDate">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline"style="margin-right: 10px;">
+            <mat-label>Data Final</mat-label>
+            <input matInput [matDatepicker]="picker2" [(ngModel)]="finalDate" [max]="maxDate">
+            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+            <mat-datepicker #picker2></mat-datepicker>
+          </mat-form-field>
+
+          <button mat-raised-button color="primary" (click)="getReport()">Filtrar</button>
+    </mat-card>
+    <p></p>
+    <mat-card style="width: auto; max-width: 800px;">       
+        <mat-card-title> Relatório</mat-card-title>
+
+        <mat-card-content *ngIf="report.qtdOrders > 0"  style="text-align: start; padding: 20px">
+            <h3>Quantidade de pedidos: {{ report.qtdOrders }}</h3>
+            <h3>Total: {{report.total| currency:'BRL':true}}</h3>
+            <h3>Total em dinheiro: {{report.totalMoney | currency:'BRL':true}}</h3>
+            <h3>Total no cartão de credito: {{report.totalCreditCard | currency:'BRL':true}}</h3>
+            <h3>Total delivery: {{report.totalDelivery| currency:'BRL':true}}</h3>
+            <h3>Total de cupons: {{report.totalCoupon | currency:'BRL':true}}</h3>
+            <h2 style="text-align: end; color: #cc9200">Total liquido: {{report.total - report.totalCoupon - report.totalDelivery | currency:'BRL':true}}</h2>
+            <mat-progress-bar mode="indeterminate" *ngIf="isWait"></mat-progress-bar>
+        </mat-card-content>
+
+        <mat-card-content *ngIf="!report.qtdOrders" style="text-align: center; padding: 20px">
+            <h3>Não há registro de pedidos neste período.</h3>        
+        </mat-card-content>
+        <mat-progress-bar mode="indeterminate" *ngIf="isWait"></mat-progress-bar>
+    </mat-card>
+
+</div>

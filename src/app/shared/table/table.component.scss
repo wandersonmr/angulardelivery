@@ -1,0 +1,79 @@
+@import "~@angular/material/theming";
+
+@mixin app-table-theme($theme) {
+    $primary: map-get($theme, primary);
+    $accent: map-get($theme, accent);
+    $warn: map-get($theme, warn);
+
+    app-table * {
+        box-sizing: content-box;
+    }
+
+    app-table {
+        .mat-card {
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 15px;
+            margin-left: 10px;
+            margin-right: 10px;
+            margin-top: 25px;
+            margin-bottom: -60px;
+            position: sticky;           
+            color: rgb(63, 62, 62);
+            background-color: mat-color($primary);
+            border-radius: 10px;
+            h4{
+                margin-top: 20px !important;
+            }
+            .mat-mini-fab {
+                background: white;
+                color: mat-color($primary);
+            }
+        }
+        .table-wrap {
+            width: 100%;
+            overflow: auto;
+            margin: 0px;
+            padding: 0px;
+            padding-top: 70px !important;
+            background: white;
+            border-radius: 4px;
+            table {
+                width: 100%;
+                td.mat-cell {
+                    // border: solid 1px #eeeeee;
+                    padding-left: 8px;
+                    padding-right: 8px;
+                    font-size: medium;
+                    min-width: 50px;
+                    a{
+                        color: #3636ec;
+                        cursor: pointer;
+                        .edit {
+                            color: #696969 ;
+                        }
+                        .delete {
+                            color: #c4342d;
+                        }
+                    }
+                }
+                // .mat-row {
+                //     &:nth-child(even) {
+                //         background-color: #ffffff;
+                //     }
+                //     &:nth-child(odd) {
+                //         background-color: #eaeaea;
+                //     }
+                // }
+            }
+        }
+        .mat-elevation-z5 {
+            margin-bottom: 15px;
+            border-radius: 10px;
+            box-shadow: 1px 1px 5px 3px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+        }
+    }
+}

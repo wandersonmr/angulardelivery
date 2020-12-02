@@ -1,0 +1,65 @@
+<div cdkFocusRegionstart class="header">
+    <h2 *ngIf="!isUpdate" class="headerTitle" mat-dialog-title>Cadastrar Cupom</h2>
+    <h2 *ngIf="isUpdate" class="headerTitle" mat-dialog-title>Atualizar Cupom</h2>
+
+    <button class="headerButton" mat-button (click)="close()">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+
+<p></p>
+<form [formGroup]="couponFormGroup">
+    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="0.5%" fxLayoutWrap>
+        <div fxFlex="50%">
+            <mat-form-field appearance="outline">
+                <mat-label>Código</mat-label>
+                <input type="text" matInput required maxlength="100" [(ngModel)]="coupon.code" formControlName="code">
+            </mat-form-field>
+        </div>
+        <div fxFlex="50%">
+            <mat-form-field appearance="outline">
+                <mat-label>Validade</mat-label>
+                <input matInput type="datetime-local" [min]="minDate" placeholder="Validade"  [(ngModel)]="coupon.dateAndHourValidate" formControlName="dateAndHourValidate">
+              </mat-form-field>
+        </div>
+    </div>
+    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="0.5%" fxLayoutWrap>
+        <div fxFlex="50%">
+            <mat-form-field appearance="outline">
+                <mat-label>Valor</mat-label>
+                <input type="number" matInput required maxlength="40" [(ngModel)]="coupon.value"
+                    formControlName="value">
+            </mat-form-field>
+        </div>
+        <div fxFlex="50%">
+            <mat-form-field appearance="outline">
+                <mat-label>Valor Mínimo</mat-label>
+                <input type="number" matInput required maxlength="40" [(ngModel)]="coupon.valueMin"
+                    formControlName="valueMin">
+            </mat-form-field>
+        </div>
+    </div>
+    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="0.5%" fxLayoutWrap>
+        <div fxFlex="50%">
+            <mat-form-field appearance="outline">
+                <mat-label>Tipo</mat-label>
+                <mat-select [(value)]="typeCouponSelected" required>
+                    <mat-option *ngFor="let type of typeCoupon" [value]="type">
+                        {{ type }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div fxFlex="50%">
+            <mat-checkbox formControlName="status" [(ngModel)]="coupon.status">
+                Disponível
+            </mat-checkbox>
+        </div>
+    </div>
+
+    <div class="button-row">
+        <button mat-raised-button (click)="reset()" style="margin-right: 5px;">Limpar</button>
+        <button mat-raised-button color="primary" *ngIf="!isUpdate" (click)="postCoupon()">Salvar</button>
+        <button mat-raised-button color="primary" *ngIf="isUpdate" (click)="putCoupon()">Salvar</button>
+    </div>
+</form>

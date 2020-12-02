@@ -1,0 +1,199 @@
+<div cdkFocusRegionstart class="header">
+    <h2 *ngIf="!isUpdate" class="headerTitle" mat-dialog-title>Cadastrar Produto</h2>
+    <h2 *ngIf="isUpdate" class="headerTitle" mat-dialog-title>Atualizar Produto</h2>
+
+    <button class="headerButton" mat-button mat-dialog-actions (click)="close()">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+
+<div class="content">
+    <mat-tab-group animationDuration="0ms" mat-stretch-tabs mat-align-tabs="center">
+        <mat-tab label="Detalhes do produto">
+            <p></p>
+            <form [formGroup]="productFormGroup">
+                <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="0.5%" fxLayoutWrap>
+                    <div fxFlex="50%">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Nome</mat-label>
+                            <input type="text" matInput required maxlength="100" formControlName="name"
+                                [(ngModel)]="product.name">
+                        </mat-form-field>
+                    </div>
+                    <div fxFlex="50%">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Categoria</mat-label>
+                            <mat-select formControlName="category" [compareWith]="compareObjects"
+                            [(ngModel)]="categorySelected" required>
+                                <mat-option *ngFor="let category of categoryList" [value]="category">
+                                    {{ category.name }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="0.5%" fxLayoutWrap>
+                    <div fxFlex="50%">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Descrição</mat-label>
+                            <input type="text" matInput required [(ngModel)]="product.description" maxlength="200"
+                                formControlName="description">
+                        </mat-form-field>
+                    </div>
+                    <div fxFlex="50%">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Valor</mat-label>
+                            <input type="number" matInput required maxlength="40" [(ngModel)]="product.priceDefault"
+                                formControlName="priceDefault">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="0.5%" fxLayoutWrap>
+                    <div fxFlex="50%">
+                        <button type="button" mat-raised-button (click)="fileInput.click()"
+                            style="margin-top: 10px;">Adicionar Imagem </button>
+                        <input hidden (change)="onselectFile($event)" #fileInput type="file" id="file">
+                        <div class="nv-file-over">
+                            <img [src]="product.image" height="100">
+                        </div>
+                    </div>
+
+                    <div fxFlex="50%">
+                        <mat-checkbox formControlName="isFeatured" [(ngModel)]="product.isFeatured"
+                            style="margin-right: 20px;">
+                            Destaque
+                        </mat-checkbox>
+                        <mat-checkbox formControlName="isAvailable" [(ngModel)]="product.isAvailable">
+                            Disponível
+                        </mat-checkbox>
+                    </div>
+                </div>
+            </form>
+        </mat-tab>
+
+        <mat-tab label="Valor / Quantidade"> 
+            <p></p>
+            <form>
+                <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="0.5%" fxLayoutWrap>
+                    <div fxFlex="33%">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Preço</mat-label>
+                            <input type="number" matInput maxlength="10" [(ngModel)]="objProductSize.price"
+                                name="objProductSize.price">
+                        </mat-form-field>
+                    </div>
+                    <div fxFlex="33%">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Quantidade</mat-label>
+                            <input type="number" matInput maxlength="10" [(ngModel)]="objProductSize.quantity"
+                                name="objProductSize.quantity">
+                        </mat-form-field>
+                    </div>
+                    <div fxFlex="33%">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Unidade</mat-label>
+                            <mat-select
+                                [(value)]="unitSelected" required>
+                                <mat-option *ngFor="let unit of unitList" [value]="unit">
+                                    {{ unit }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </form>
+            <div>
+                <button mat-raised-button color="primary" (click)="addProductSize()">Adicionar</button>
+            </div>
+            <p></p>
+
+            <mat-table [dataSource]="productSizesList" class="mat-elevation-z8">
+
+                <ng-container matColumnDef="price">
+                    <mat-header-cell *matHeaderCellDef> Preço </mat-header-cell>
+                    <mat-cell *matCellDef="let productSize"> {{productSize.price | currency:'BRL':true:'1.2-2'}}
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="quantity">
+                    <mat-header-cell *matHeaderCellDef> Quantidade </mat-header-cell>
+                    <mat-cell *matCellDef="let productSize"> {{productSize.quantity}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="unit">
+                    <mat-header-cell *matHeaderCellDef> unidade </mat-header-cell>
+                    <mat-cell *matCellDef="let productSize"> {{productSize.unit}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="productSizeOptions">
+                    <th mat-header-cell *matHeaderCellDef></th>
+                    <td mat-cell *matCellDef="let productSize" style="text-align: center;">
+                        <a>
+                            <i class="material-icons delete" (click)="removeProductSize(productSize)">delete</i>
+                        </a>
+                    </td>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            </mat-table>
+        </mat-tab>
+
+        <mat-tab label="Adicionais">
+            <p></p>
+            <form>
+                <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="0.5%" fxLayoutWrap>
+                    <div fxFlex="50%">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Nome</mat-label>
+                            <input type="text" matInput maxlength="100" [(ngModel)]="objProductAdditional.name" name="objProductAdditional.name">
+                        </mat-form-field>
+                    </div>
+                    <div fxFlex="50%">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Preço</mat-label>
+                            <input type="number" matInput maxlength="10"[(ngModel)]="objProductAdditional.price" name="objProductAdditional.price">
+                        </mat-form-field>
+                    </div>
+                </div>
+            </form>
+            <div>
+                <button mat-raised-button color="primary" (click)="addProductAdditional()">Adicionar</button>
+            </div>
+            <p></p>
+            
+            <mat-table [dataSource]="productAdditionalsList" class="mat-elevation-z8">
+
+                <ng-container matColumnDef="price">
+                    <mat-header-cell *matHeaderCellDef> Preço </mat-header-cell>
+                    <mat-cell *matCellDef="let productAdditional"> {{productAdditional.price | currency:'BRL':true:'1.2-2'}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="name">
+                    <mat-header-cell *matHeaderCellDef> Nome </mat-header-cell>
+                    <mat-cell *matCellDef="let productAdditional"> {{productAdditional.name}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="productAdditionalOptions">
+                    <th mat-header-cell *matHeaderCellDef></th>
+                    <td mat-cell *matCellDef="let productAdditional" style="text-align: center;">
+                      <a>
+                        <i class="material-icons delete" (click)="removeProductAdditional(productAdditional)">delete</i> 
+                      </a>
+                    </td>
+                  </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns2"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns2;"></mat-row>
+            </mat-table>
+        </mat-tab>
+    </mat-tab-group>
+    <div class="button-row" style="margin-top: 15px;">
+        <button mat-raised-button style="margin-right: 5px;" (click)="close()">Fechar</button>
+        <!-- <button mat-raised-button (click)="reset()" style="margin-left: 5px;">Limpar</button> -->
+        <button *ngIf="!isUpdate" mat-raised-button (click)="validForm('create')" color="primary"
+            style="margin-left: 5px;">Salvar</button>
+        <button *ngIf="isUpdate" mat-raised-button (click)="validForm('update')" color="primary"
+            style="margin-left: 5px;">Salvar</button>
+    </div>
+</div>

@@ -1,0 +1,18 @@
+<div cdkFocusRegionstart class="header">
+    <h2 class="headerTitle" mat-dialog-title>Valor da entrega</h2>
+    <button class="headerButton" mat-button (click)="close()">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+
+<p></p>
+<form>
+    <mat-form-field appearance="outline">
+        <mat-label>Valor frete</mat-label>
+        <input type="number" matInput required [(ngModel)]="freight" name="freight">
+    </mat-form-field>
+</form>
+<div class="button-row">
+    <button mat-raised-button (click)="close()" style="margin-right: 5px;">Cancelar</button>
+    <button mat-raised-button color="primary" (click)="putFreight()">Salvar</button>
+</div>
